@@ -1,0 +1,107 @@
+[
+  {
+    "_id": 1,
+    "title": "Gemfibrozil",
+    "author": "Merci Voller",
+    "genre": "Sci-Fi",
+    "p_date": "7/21/2022"
+  },
+  {
+    "_id": 2,
+    "title": "Clomipramine Hydrochloride",
+    "author": "Marice Moscon",
+    "genre": "Drama|Thriller",
+    "p_date": "12/1/2022"
+  },
+  {
+    "_id": 3,
+    "title": "zolpidem tartrate",
+    "author": "Katy Dell'Abbate",
+    "genre": "Comedy|Drama",
+    "p_date": "8/7/2022"
+  },
+  {
+    "_id": 4,
+    "title": "Titanium Dioxide and Octinoxate",
+    "author": "Eveline Francescuccio",
+    "genre": "Drama|Mystery",
+    "p_date": "4/16/2023"
+  },
+  {
+    "_id": 5,
+    "title": "Amitriptyline Hydrochloride",
+    "author": "Marillin Pleaden",
+    "genre": "Horror|Thriller",
+    "p_date": "5/17/2023"
+  },
+  {
+    "_id": 6,
+    "title": "Turkey",
+    "author": "Joni Menear",
+    "genre": "Romance|Thriller",
+    "p_date": "11/9/2022"
+  },
+  {
+    "_id": 7,
+    "title": "Amitriptyline Hydrochloride",
+    "author": "Nissa Davenell",
+    "genre": "Adventure|Sci-Fi",
+    "p_date": "7/13/2023"
+  },
+  {
+    "_id": 8,
+    "title": "losartan potassium",
+    "author": "Agnola Milsted",
+    "genre": "Comedy|Drama",
+    "p_date": "8/30/2022"
+  },
+  {
+    "_id": 9,
+    "title": "Aluminum Zirconium Octachlorohydrex Gly",
+    "author": "Bevvy Izaks",
+    "genre": "Drama|Romance",
+    "p_date": "12/7/2022"
+  },
+  {
+    "_id": 10,
+    "title": "Alcohol",
+    "author": "Beulah McCadden",
+    "genre": "Drama|Musical",
+    "p_date": "3/27/2023"
+  },
+  {
+    "_id": 11,
+    "title": "Acetaminophen",
+    "author": "Gabbi Shillitto",
+    "genre": "Comedy|Crime",
+    "p_date": "10/4/2022"
+  },
+  {
+    "_id": 12,
+    "title": "Metoprolol Succinate",
+    "author": "Andrea Posen",
+    "genre": "Action|Horror",
+    "p_date": "2/19/2023"
+  },
+  {
+    "_id": 13,
+    "title": "SODIUM MONOFLUOROPHOSPHATE",
+    "author": "Sarena Satterlee",
+    "genre": "Drama",
+    "p_date": "10/2/2022"
+  },
+  {
+    "_id": 14,
+    "title": "SALICYLIC ACID",
+    "author": "Dru Mayhead",
+    "genre": "Comedy|Drama",
+    "p_date": "10/20/2022"
+  },
+  {
+    "_id": 15,
+    "title": "Guaifenesin",
+    "author": "Teresina Domniney",
+    "genre": "Mystery|Thriller",
+    "p_date": "4/22/2023"
+  }
+]

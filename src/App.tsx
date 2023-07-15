@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <Home></Home>
-      <Footer></Footer>
+      <Footer></Footer>  
     </>
   );
 }
