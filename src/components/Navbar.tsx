@@ -7,6 +7,7 @@ import {
   IconButton,
   Card,
 } from "@material-tailwind/react";
+import { Link } from "react-router-dom";
 
 export default function NavbarBig() {
   const [openNav, setOpenNav] = React.useState(false);
@@ -25,9 +26,9 @@ export default function NavbarBig() {
         variant="medium"
         className="py-1 px-8 font-semibold text-gray-700"
       >
-        <a href="#" className="flex items-center">
+        <Link to='/all-books' className="flex items-center">
           All Books
-        </a>
+        </Link>
       </Typography>
     </ul>
   );
