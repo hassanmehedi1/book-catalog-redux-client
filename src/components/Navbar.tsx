@@ -26,7 +26,7 @@ export default function NavbarBig() {
         variant="medium"
         className="py-1 px-8 font-semibold text-gray-700"
       >
-        <Link to='/all-books' className="flex items-center">
+        <Link to='/all-books' className="flex items-center active:text-blue-700 focus:text-blue-700">
           All Books
         </Link>
       </Typography>
@@ -42,7 +42,7 @@ export default function NavbarBig() {
             href="#"
             className="mr-4 cursor-pointer py-1.5 font-bold text-2xl text-blue-500"
           >
-            BookVerse
+            <Link to='/'>BookVerse</Link>
           </Typography>
           <div className="flex items-center gap-4">
             <div className="mr-4 hidden lg:block">{navList}</div>
