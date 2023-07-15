@@ -9,9 +9,11 @@ const dummyComments = [
 
 export default function BookReview() {
   return (
-    <div className="max-w-7xl mx-auto mt-5">
+    <div className="max-w-lg mx-auto mt-10">
+      <h1 className="text-xl text-center mb-5 font-semibold">Leave a Review</h1>
+
       <div className="flex gap-5 items-center">
-        <Textarea className="min-h-[30px]" />
+        <Textarea placeholder="Write Your Review Here" className="min-h-[30px]" />
         <Button className="rounded-full h-10 w-10 p-2 text-[25px]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +28,10 @@ export default function BookReview() {
       <div className="mt-10">
         {dummyComments.map((comment, index) => (
           <div key={index} className="flex gap-3 items-center mb-5">
-            <Avatar src="/img/face-2.jpg" alt="avatar" />
+            <Avatar
+              src="https://sm.ign.com/ign_pk/cover/a/avatar-gen/avatar-generations_rpge.jpg"
+              alt="avatar"
+            />
             <p>{comment}</p>
           </div>
         ))}
