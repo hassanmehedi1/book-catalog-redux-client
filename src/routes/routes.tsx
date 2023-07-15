@@ -3,6 +3,7 @@ import App from "../App";
 import Home from "../pages/Home";
 import NotFound from "../components/NotFound";
 import AllBooks from "../pages/AllBooks";
+import BookDetails from "../pages/BookDetails";
 
 const routes = createBrowserRouter([
   {
@@ -17,10 +18,10 @@ const routes = createBrowserRouter([
         path: "/all-books",
         element: <AllBooks />,
       },
-      // {
-      //   path: "/product-details/:id",
-      //   element: <ProductDetails />,
-      // },
+      {
+        path: "/book-details/:id",
+        element: <BookDetails />,
+      },
     ],
   },
   // {

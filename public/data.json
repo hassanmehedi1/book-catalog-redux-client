@@ -8,7 +8,7 @@
   },
   {
     "_id": 2,
-    "title": "Clomipramine Hydrochloride",
+    "title": "Clomipramine",
     "author": "Marice Moscon",
     "genre": "Drama|Thriller",
     "p_date": "12/1/2022"
@@ -22,7 +22,7 @@
   },
   {
     "_id": 4,
-    "title": "Titanium Dioxide and Octinoxate",
+    "title": "Titanium",
     "author": "Eveline Francescuccio",
     "genre": "Drama|Mystery",
     "p_date": "4/16/2023"
@@ -57,7 +57,7 @@
   },
   {
     "_id": 9,
-    "title": "Aluminum Zirconium Octachlorohydrex Gly",
+    "title": "Aluminum Zirconium",
     "author": "Bevvy Izaks",
     "genre": "Drama|Romance",
     "p_date": "12/7/2022"
