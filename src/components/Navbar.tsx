@@ -5,7 +5,6 @@ import {
   Typography,
   Button,
   IconButton,
-  Card,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
@@ -26,7 +25,10 @@ export default function NavbarBig() {
         variant="medium"
         className="py-1 px-8 font-semibold text-gray-700"
       >
-        <Link to='/all-books' className="flex items-center active:text-blue-700 focus:text-blue-700">
+        <Link
+          to="/all-books"
+          className="flex items-center active:text-blue-700 focus:text-blue-700"
+        >
           All Books
         </Link>
       </Typography>
@@ -42,25 +44,29 @@ export default function NavbarBig() {
             href="#"
             className="mr-4 cursor-pointer py-1.5 font-bold text-2xl text-blue-500"
           >
-            <Link to='/'>BookVerse</Link>
+            <Link to="/">BookVerse</Link>
           </Typography>
           <div className="flex items-center gap-4">
             <div className="mr-4 hidden lg:block">{navList}</div>
-            <Button
-              variant="gradient"
-              size="md"
-              className="hidden lg:inline-block"
-            >
-              <span>Login</span>
-            </Button>
+            <Link to="/login">
+              <Button
+                variant="gradient"
+                size="md"
+                className="hidden lg:inline-block"
+              >
+                <span>Login</span>
+              </Button>
+            </Link>
 
-            <Button
-              variant="gradient"
-              size="md"
-              className="hidden lg:inline-block"
-            >
-              <span>Sign Up</span>
-            </Button>
+            <Link to="/signup">
+              <Button
+                variant="gradient"
+                size="md"
+                className="hidden lg:inline-block"
+              >
+                <span>Sign Up</span>
+              </Button>
+            </Link>
             <IconButton
               variant="text"
               className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
