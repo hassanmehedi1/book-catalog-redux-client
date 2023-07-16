@@ -14,35 +14,12 @@ import {
   Button,
 } from "@material-tailwind/react";
 import BookReview from "../components/BookReview";
+import { useGetBooksQuery, useSingleBookQuery } from "../redux/api/apiSlice";
 
 export default function BookDetails() {
   const { id } = useParams();
 
-  const [data, setData] = useState<IBooks[]>([]);
-  const [book, setBook] = useState<IBooks | null>(null);
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-
-  useEffect(() => {
-    fetch("../../public/data.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
-
-  useEffect(() => {
-    const selectedBook = data.find((item) => item._id === Number(id));
-    setBook(selectedBook!);
-  }, [data, id]);
-
-  const handleEditBook = () => {
-    // history.push(`/edit-book/${id}`);
-  };
-
-  const handleDeleteBook = () => {
-    // Implement your logic to delete the book
-    // You can show a confirmation dialogue here before deleting the book
-    // For demonstration purposes, we'll just log a message
-    console.log("Book deleted");
-  };
+  const { data: book, isLoading, isError } = useSingleBookQuery(id);
 
   return (
     <section className="grid grid-cols-1 justify-center">
@@ -75,19 +52,17 @@ export default function BookDetails() {
       </div>
 
       <div className="flex justify-center mt-6 space-x-4">
-        <Button color="teal" size="lg" onClick={handleEditBook}>
+        <Button color="teal" size="lg">
           Edit Book
         </Button>
-        <Button color="red" size="lg" onClick={() => setDeleteModalOpen(true)}>
+        <Button color="red" size="lg">
           Delete Book
         </Button>
       </div>
 
       <div>
-        <BookReview />
+        <BookReview id={id!} />
       </div>
-
-      {/* Delete Book Confirmation Modal */}
     </section>
   );
 }

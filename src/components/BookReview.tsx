@@ -7,13 +7,20 @@ const dummyComments = [
   "200 taka dibo, hobe ??",
 ];
 
-export default function BookReview() {
+interface IProps {
+  id: string;
+}
+
+export default function BookReview({ id }: IProps) {
   return (
     <div className="max-w-lg mx-auto mt-10">
       <h1 className="text-xl text-center mb-5 font-semibold">Leave a Review</h1>
 
       <div className="flex gap-5 items-center">
-        <Textarea placeholder="Write Your Review Here" className="min-h-[30px]" />
+        <Textarea
+          placeholder="Write Your Review Here"
+          className="min-h-[30px]"
+        />
         <Button className="rounded-full h-10 w-10 p-2 text-[25px]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
