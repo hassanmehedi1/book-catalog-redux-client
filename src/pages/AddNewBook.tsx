@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { usePostBookMutation } from "../redux/api/apiSlice";
 
 export default function AddNewBook() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [genre, setGenre] = useState("");
   const [publicationDate, setPublicationDate] = useState("");
+
+  const [postBook, { isLoading }] = usePostBookMutation();
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -29,12 +32,15 @@ export default function AddNewBook() {
 
     // Create a new book object
     const newBook = {
-      _id: Date.now(),
-      title: title,
-      author: author,
-      genre: genre,
-      p_date: publicationDate,
+      data: {
+        title: title,
+        author: author,
+        genre: genre,
+        p_date: publicationDate,
+      },
     };
+
+    postBook(newBook);
 
     // Implement your logic to save the new book to the database or update the state with the new book
     // For this example, we'll just log the new book to the console
