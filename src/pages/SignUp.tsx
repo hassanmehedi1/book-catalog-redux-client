@@ -10,6 +10,8 @@ import { auth } from "../lib/firebase.init";
 import useToken from "../hooks/useToken";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { Spinner } from "@material-tailwind/react";
+import { FcGoogle } from "react-icons/fc";
+
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -63,9 +65,11 @@ const SignUp = () => {
 
   return (
     <div className="flex lg:h-screen justify-center items-center">
-      <div className="card w-96 bg-base-100 shadow-xl">
-        <div className="card-body items-center ">
-          <h2 className="card-title text-2xl">Sign Up</h2>
+      <div className="p-10 w-[30%] bg-base-100 shadow-xl">
+        <div className="p-2 items-center ">
+          <h2 className="text-center text-2xl text-blue-700 font-semibold pb-5">
+            Sign Up
+          </h2>
 
           <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
             <div className="mt-[20px] ">
@@ -101,7 +105,7 @@ const SignUp = () => {
               </label>
             </div>
 
-            <div className="relative ">
+            <div className="relative mt-5">
               <input
                 id="email"
                 type="email"
@@ -140,7 +144,7 @@ const SignUp = () => {
               )}
             </label>
 
-            <div className="relative flex justify-end items-center">
+            <div className="relative flex justify-end items-center mt-5">
               <input
                 id="password"
                 type={!isVisible ? "password" : "text"}
@@ -185,23 +189,24 @@ const SignUp = () => {
             {signInError}
             <input
               type="submit"
-              className="btn btn-accent w-full mt-4 text-white"
+              className="p-2 my-8 bg-blue-600 w-full text-white rounded-2xl cursor-pointer"
               value="Sign Up"
             />
           </form>
-          <p className="text-sm pt-2">
+          <p className="text-base pt-2 text-center my-3">
             Already have an Account?{" "}
-            <Link className="text-sky-500" to="/login">
+            <Link className="text-cyan-600" to="/login">
               Please Login
             </Link>
           </p>
 
-          <div className="divider">OR</div>
+          <hr />
+
           <button
-            className="btn btn-outline w-full"
+            className="border rounded-xl p-3 bg-blue-400 text-white w-full mt-3 flex justify-center items-center"
             onClick={() => signInWithGoogle()}
           >
-            Continue With Google
+            <FcGoogle /> <span className="ml-3">Continue With Google</span>
           </button>
         </div>
       </div>
