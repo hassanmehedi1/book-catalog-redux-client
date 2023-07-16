@@ -4,18 +4,21 @@ import { useEffect, useState } from "react";
 import { IBooks } from "../types/globalTypes";
 import BookCard from "../components/BookCard";
 import { Link } from "react-router-dom";
+import { useGetBooksQuery } from "../redux/api/apiSlice";
 
 export default function AllBooks() {
-  const [data, setData] = useState<IBooks[]>([]);
+  // const [data, setData] = useState<IBooks[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
 
-  useEffect(() => {
-    fetch("./data.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+  // useEffect(() => {
+  //   fetch("./data.json")
+  //     .then((res) => res.json())
+  //     .then((data) => setData(data));
+  // }, []);
+
+  const { data, isLoading, isError } = useGetBooksQuery(undefined);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -29,22 +32,30 @@ export default function AllBooks() {
     setSelectedYear(e.target.value);
   };
 
-  const filteredBooks = data.filter((book) => {
-    const titleMatch = book.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const authorMatch = book.author
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const genreMatch = book.genre.toLowerCase() === selectedGenre.toLowerCase();
-    const yearMatch = book.p_date.includes(selectedYear);
+  const filteredBooks = data?.data?.filter(
+    (book: {
+      title: string;
+      author: string;
+      genre: string;
+      p_date: string | string[];
+    }) => {
+      const titleMatch = book.title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const authorMatch = book.author
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const genreMatch =
+        book.genre.toLowerCase() === selectedGenre.toLowerCase();
+      const yearMatch = book.p_date.includes(selectedYear);
 
-    return (
-      (titleMatch || authorMatch) &&
-      (!selectedGenre || genreMatch) &&
-      (!selectedYear || yearMatch)
-    );
-  });
+      return (
+        (titleMatch || authorMatch) &&
+        (!selectedGenre || genreMatch) &&
+        (!selectedYear || yearMatch)
+      );
+    }
+  );
 
   const resetFilters = () => {
     setSearchQuery("");
@@ -53,7 +64,9 @@ export default function AllBooks() {
   };
 
   // Extract unique genres from the book data
-  const genres = [...new Set(data.map((book) => book.genre))];
+  const genres = [
+    ...new Set(data?.data?.map((book: { genre: string }) => book.genre)),
+  ];
 
   return (
     <section>
@@ -77,8 +90,9 @@ export default function AllBooks() {
           onChange={handleGenreChange}
           className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
         >
-          {genres.map((genre) => (
-            <option key={genre} value={genre}>
+          {/* <option value="Drama">Drama</option>  */}
+          {(genres as string[]).map((genre: string, i: number) => (
+            <option key={i} value={genre}>
               {genre}
             </option>
           ))}
@@ -113,9 +127,10 @@ export default function AllBooks() {
       </div>
 
       <div className="grid grid-cols-3 gap-5 pb-20 container mx-auto mt-10 cursor-pointer">
-        {filteredBooks.map((book) => (
-          <BookCard key={book._id} book={book} />
-        ))}
+        {filteredBooks &&
+          filteredBooks.map((book: IBooks) => (
+            <BookCard key={book._id} book={book} />
+          ))}
       </div>
     </section>
   );
