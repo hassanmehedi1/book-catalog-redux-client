@@ -18,27 +18,16 @@ const routes = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/all-books",
-        element: <AllBooks />,
+        path: "/login",
+        element: <Login />,
       },
       {
-        path: "/add-new-book",
-        element: <AddNewBook />,
-      },
-      {
-        path: "/book-details/:id",
-        element: <BookDetails />,
+        path: "/signup",
+        element: <SignUp />,
       },
     ],
   },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/signup",
-    element: <SignUp />,
-  },
+
   {
     path: "*",
     element: <NotFound />,

@@ -1,24 +1,25 @@
+/* eslint-disable no-empty-pattern */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import Cookies from "js-cookie";
+import { BASE_URL } from "../../config";
+
+export const getAccessToken = () => {
+  return Cookies.get("accessToken");
+};
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000" }),
-  endpoints: (builder) => ({
-    getBooks: builder.query({
-      query: () => "/books",
-    }),
-    singleBook: builder.query({
-      query: (id) => `/books/${id}`,
-    }),
-    postBook: builder.mutation({
-      query: ({ data }) => ({
-        url: `/books`,
-        method: "POST",
-        body: data,
-      }),
-    }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: BASE_URL,
+    prepareHeaders: (headers, {}) => {
+      const token = getAccessToken();
+      if (token) {
+        headers.set("authorization", token);
+      }
+      headers.set("Content-Type", "application/json");
+      return headers;
+    },
   }),
+  tagTypes: ["review", "newBook", "wishList"],
+  endpoints: () => ({}),
 });
-
-export const { useGetBooksQuery, useSingleBookQuery, usePostBookMutation } =
-  api;

@@ -1,215 +1,145 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import {
-  useSignInWithEmailAndPassword,
-  useSignInWithGoogle,
-} from "react-firebase-hooks/auth";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+  Card,
+  Input,
+  Checkbox,
+  Button,
+  Typography,
+  Spinner,
+} from "@material-tailwind/react";
+import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useLoginMutation } from "../redux/features/user/userApiSlice";
 import { toast } from "react-toastify";
-import { auth } from "../lib/firebase.init";
-import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import { FcGoogle } from "react-icons/fc";
-import { Spinner } from "@material-tailwind/react";
-import useToken from "../hooks/useToken";
 
-const Login = () => {
-  const [isVisible, setVisible] = useState(false);
-  const toggle = () => {
-    setVisible(!isVisible);
-  };
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
+type LoginFormValues = {
+  email: string;
+  password: string;
+};
 
-  const [signInWithGoogle, googleUser, googleLoading, googleError] =
-    useSignInWithGoogle(auth);
-
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
-
-  type LoginFormValues = {
-    email: string;
-    password: string;
-  };
+export default function Login() {
+  const [passwordErr, setPasswordErr] = useState("");
+  const [emailErr, setEmailErr] = useState("");
 
   const {
     register,
-    formState: { errors },
     handleSubmit,
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>();
+  const [loginMutation] = useLoginMutation();
+  const navigate = useNavigate();
+  const [login, { isLoading }] = useLoginMutation();
 
-  const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
-    void signInWithEmailAndPassword(data.email, data.password);
-  };
-
-  const [token] = useToken(user || googleUser);
-
-  useEffect(() => {
-    if (token) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      navigate(from, { replace: true });
-    }
-  }, [token, from, navigate]);
-
-  useEffect(() => {
-    const errorMsg = error || googleError;
-    if (errorMsg) {
-      switch (errorMsg?.code) {
-        case "auth/invalid-email":
-          toast("Invalid email provided, please provide a valid email");
-          break;
-
-        case "auth/invalid-password":
-          toast("Wrong password. Intruder!!");
-          break;
-
-        case "auth/wrong-password":
-          toast("Wrong Password");
-          break;
-
-        case "auth/user-not-found":
-          toast("User Not Found");
-          break;
-
-        default:
-          toast("something went wrong");
-      }
-    }
-  }, [error, googleError]);
-
-  let signInError;
-  if (error || googleError) {
-    signInError = (
-      <span className="text-red-500">
-        {error?.message || googleError?.message}
-      </span>
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center">
+        <Spinner />
+      </div>
     );
   }
-  if (loading || googleLoading) {
-    return <Spinner className="h-16 w-16 text-blue-500/10" />;
-  }
+
+  const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
+    try {
+      setPasswordErr("");
+      setEmailErr("");
+      const response = await loginMutation(data);
+      //@ts-ignore
+      const accessToken = response?.data?.data?.accessToken;
+      if (accessToken) {
+        Cookies.set("accessToken", accessToken); // Store the access token in a cookie
+      }
+
+      await login({ email: data.email, password: data.password }).unwrap();
+      navigate("/");
+
+      toast.success("Login successful!", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000, // Closing the toast after 3 seconds
+        hideProgressBar: true,
+      });
+    } catch (error) {
+      //@ts-ignore
+      if (error?.data?.message === "Password is incorrect") {
+        setPasswordErr("Password is incorrect");
+        //@ts-ignore
+      } else if (error?.data?.message === "User does not exist") {
+        setEmailErr("User does not exist");
+      }
+    }
+  };
 
   return (
-    <div className="flex lg:h-screen justify-center items-center">
-      <div className="p-10 w-[30%] bg-base-100 shadow-xl">
-        <div className="p-2 items-center ">
-          <h2 className="text-center text-2xl text-blue-700 font-semibold pb-5">
-            Login
-          </h2>
-
-          <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-            <div className="relative ">
-              <input
-                id="email"
-                type="email"
-                className="peer h-10 w-full  text-gray-900 placeholder-transparent focus:outline-none focus:border-primary"
-                placeholder="Email"
-                {...register("email", {
-                  required: {
-                    value: true,
-                    message: "Email is required",
-                  },
-                  pattern: {
-                    value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
-                    message: "Provide a valid email",
-                  },
-                })}
-              />
-
-              <label
-                htmlFor="email"
-                className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
-              >
-                Email
-              </label>
-            </div>
-            <hr />
-
-            <label className="label text-center">
-              {errors.email?.type === "required" && (
-                <span className="label-text-alt text-red-600 ">
-                  {errors.email.message}
-                </span>
-              )}
-              {errors.email?.type === "pattern" && (
-                <span className="label-text-alt text-red-600">
-                  {errors.email.message}
-                </span>
-              )}
-            </label>
-
-            <div className="relative flex justify-end items-center mt-5 ">
-              <input
-                id="password"
-                type={!isVisible ? "password" : "text"}
-                className="peer h-10 w-full  text-gray-900 placeholder-transparent focus:outline-none focus:border-primary"
-                placeholder="name"
-                {...register("password", {
-                  required: {
-                    value: true,
-                    message: "Password is required",
-                  },
-                  minLength: {
-                    value: 6,
-                    message: "Password should be contains 6 characters",
-                  },
-                })}
-              />
-              <i className="pr-[1rem] cursor-pointer" onClick={toggle}>
-                {isVisible ? <BsEyeFill /> : <BsEyeSlashFill />}
-              </i>
-
-              <label
-                htmlFor="password"
-                className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
-              >
-                Password
-              </label>
-            </div>
-            <hr />
-            <label className="label text-center">
-              {errors.password?.type === "required" && (
-                <span className="label-text-alt text-red-600 ">
-                  {errors.password.message}
-                </span>
-              )}
-              {errors.password?.type === "pattern" && (
-                <span className="label-text-alt text-red-600">
-                  {errors.password.message}
-                </span>
-              )}
-            </label>
-
-            {signInError}
-            <input
-              type="submit"
-              className="p-2 my-8 bg-blue-600 w-full text-white rounded-2xl cursor-pointer"
-              value="Login"
+    <section className="w-full h-full md:h-[80vh] flex justify-center items-center">
+      <Card color="transparent" shadow={false}>
+        <Typography className="flex justify-center text-blue-600 text-3xl font-semibold">
+          Login
+        </Typography>
+        <Typography className="flex justify-center text-gray-600 text-base mt-5">
+          Enter your credentials to login
+        </Typography>
+        <form
+          className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div className="mb-4 flex flex-col gap-6">
+            <Input
+              size="lg"
+              label="Email"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
             />
-          </form>
-          <p className="text-sm pt-2 text-center my-3">
-            New to Book Verse?{" "}
-            <Link className="text-cyan-600 text-base" to="/signup">
-              Create new account
-            </Link>
-          </p>
+            {emailErr && !errors.email && (
+              <span className="text-red-500">{emailErr}</span>
+            )}
+            {errors.email && (
+              <span className="text-red-500">{errors.email.message}</span>
+            )}
 
-          <hr />
-
-          <button
-            className="border rounded-xl p-3 bg-blue-400 text-white w-full mt-3 flex justify-center items-center"
-            onClick={() => signInWithGoogle()}
+            <Input
+              type="password"
+              size="lg"
+              label="Password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters long",
+                },
+              })}
+            />
+            {passwordErr && !errors.password && (
+              <span className="text-red-500">{passwordErr}</span>
+            )}
+            {errors.password && (
+              <span className="text-red-500">{errors.password.message}</span>
+            )}
+          </div>
+          <Button
+            className="mt-6"
+            fullWidth
+            type="submit"
+            disabled={isSubmitting}
           >
-            <FcGoogle /> <span className="ml-3">Continue With Google</span>
-          </button>
-        </div>
-      </div>
-    </div>
+            Login
+          </Button>
+          <Typography color="gray" className="mt-4 text-center font-normal">
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              className="font-medium text-blue-500 transition-colors hover:text-blue-700"
+            >
+              Sign Up
+            </Link>
+          </Typography>
+        </form>
+      </Card>
+    </section>
   );
-};
-
-export default Login;
+}

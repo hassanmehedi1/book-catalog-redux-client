@@ -7,9 +7,11 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../lib/firebase.init";
-import { signOut } from "firebase/auth";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { getAccessToken } from "../redux/api/apiSlice";
+import { toast } from "react-toastify";
 
 export default function NavbarBig() {
   const [openNav, setOpenNav] = React.useState(false);
@@ -21,9 +23,29 @@ export default function NavbarBig() {
     );
   }, []);
 
-  const [user] = useAuthState(auth);
-  const handleSignout = () => {
-    signOut(auth);
+  const navigate = useNavigate();
+  const accessToken = getAccessToken();
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Log Out",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Cookies.remove("accessToken"); // Clear the access token from the cookie
+        toast.success("Log Out successful!", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000, // Close the toast after 3 seconds
+          hideProgressBar: true,
+        });
+        navigate("/login"); // Redirect the user to the login page
+      }
+    });
   };
 
   const navList = (
@@ -56,8 +78,8 @@ export default function NavbarBig() {
           </Typography>
           <div className="flex items-center gap-4">
             <div className="mr-4 hidden lg:block">{navList}</div>
-            {user ? (
-              <Button onClick={handleSignout} color="red" variant="filled">
+            {accessToken ? (
+              <Button onClick={handleLogout} color="red" variant="filled">
                 Sign Out
               </Button>
             ) : (

@@ -1,217 +1,148 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable no-empty-pattern */
+import { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import {
-  useCreateUserWithEmailAndPassword,
-  useSignInWithGoogle,
-} from "react-firebase-hooks/auth";
-import { SubmitHandler, useForm } from "react-hook-form";
+  Card,
+  Input,
+  Checkbox,
+  Button,
+  Typography,
+} from "@material-tailwind/react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../lib/firebase.init";
-import useToken from "../hooks/useToken";
-import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import { Spinner } from "@material-tailwind/react";
-import { FcGoogle } from "react-icons/fc";
+import { useSignupMutation } from "../redux/features/user/userApiSlice";
 
-
-const SignUp = () => {
-  const navigate = useNavigate();
-  const [isVisible, setVisible] = useState(false);
-  const toggle = () => {
-    setVisible(!isVisible);
-  };
-  const [signInWithGoogle, googleUser, googleLoading, googleError] =
-    useSignInWithGoogle(auth);
-
-  const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
-
-  type RegisterFormValues = {
-    email: string;
-    password: string;
-    name: string;
-  };
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<RegisterFormValues>();
-
-  const [token] = useToken(user || googleUser);
-
-  const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
-    await createUserWithEmailAndPassword(data.email, data.password);
-  };
-
-  useEffect(() => {
-    if (token) {
-      navigate("/media");
-    }
-  }, [token, navigate]);
-  //   if (user || googleUser) {
-  //     navigate("/home");
-  //   }
-  let signInError;
-  if (error || googleError) {
-    signInError = (
-      <span className="text-red-500">
-        {error?.message || googleError?.message}
-      </span>
-    );
-  }
-  if (loading || googleLoading) {
-    return <Spinner className="h-16 w-16 text-blue-500/10" />;
-  }
-
-  return (
-    <div className="flex lg:h-screen justify-center items-center">
-      <div className="p-10 w-[30%] bg-base-100 shadow-xl">
-        <div className="p-2 items-center ">
-          <h2 className="text-center text-2xl text-blue-700 font-semibold pb-5">
-            Sign Up
-          </h2>
-
-          <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-            <div className="mt-[20px] ">
-              <div className="relative ">
-                <input
-                  id="fname"
-                  type="text"
-                  className="peer h-10 w-full  text-gray-900 placeholder-transparent focus:outline-none focus:border-primary"
-                  placeholder="name"
-                  {...register("name", {
-                    required: {
-                      value: true,
-                      message: "Name is required",
-                    },
-                  })}
-                />
-
-                <label
-                  htmlFor="fname"
-                  className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
-                >
-                  Full Name
-                </label>
-              </div>
-
-              <hr />
-              <label className="label text-start">
-                {errors.name?.type === "required" && (
-                  <span className="label-text-alt text-red-600">
-                    {errors.name.message as string}
-                  </span>
-                )}
-              </label>
-            </div>
-
-            <div className="relative mt-5">
-              <input
-                id="email"
-                type="email"
-                className="peer h-10 w-full  text-gray-900 placeholder-transparent focus:outline-none focus:border-primary"
-                placeholder="name"
-                {...register("email", {
-                  required: {
-                    value: true,
-                    message: "Email is required",
-                  },
-                  pattern: {
-                    value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
-                    message: "Provide a valid email",
-                  },
-                })}
-              />
-
-              <label
-                htmlFor="email"
-                className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
-              >
-                Email
-              </label>
-            </div>
-            <hr />
-            <label className="label text-center">
-              {errors.email?.type === "required" && (
-                <span className="label-text-alt text-red-600 ">
-                  {errors.email.message as string}
-                </span>
-              )}
-              {errors.email?.type === "pattern" && (
-                <span className="label-text-alt text-red-600">
-                  {errors.email.message as string}
-                </span>
-              )}
-            </label>
-
-            <div className="relative flex justify-end items-center mt-5">
-              <input
-                id="password"
-                type={!isVisible ? "password" : "text"}
-                className="peer h-10 w-full  text-gray-900 placeholder-transparent focus:outline-none focus:border-primary"
-                placeholder="name"
-                {...register("password", {
-                  required: {
-                    value: true,
-                    message: "Password is required",
-                  },
-                  minLength: {
-                    value: 6,
-                    message: "Password should be contains 6 characters",
-                  },
-                })}
-              />
-              <i className="pr-[1rem] cursor-pointer" onClick={toggle}>
-                {isVisible ? <BsEyeFill /> : <BsEyeSlashFill />}
-              </i>
-
-              <label
-                htmlFor="password"
-                className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
-              >
-                Password
-              </label>
-            </div>
-            <hr />
-            <label className="label text-center">
-              {errors.password?.type === "required" && (
-                <span className="label-text-alt text-red-600 ">
-                  {errors.password.message as string}
-                </span>
-              )}
-              {errors.password?.type === "pattern" && (
-                <span className="label-text-alt text-red-600">
-                  {errors.password.message as string}
-                </span>
-              )}
-            </label>
-
-            {signInError}
-            <input
-              type="submit"
-              className="p-2 my-8 bg-blue-600 w-full text-white rounded-2xl cursor-pointer"
-              value="Sign Up"
-            />
-          </form>
-          <p className="text-base pt-2 text-center my-3">
-            Already have an Account?{" "}
-            <Link className="text-cyan-600" to="/login">
-              Please Login
-            </Link>
-          </p>
-
-          <hr />
-
-          <button
-            className="border rounded-xl p-3 bg-blue-400 text-white w-full mt-3 flex justify-center items-center"
-            onClick={() => signInWithGoogle()}
-          >
-            <FcGoogle /> <span className="ml-3">Continue With Google</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+type SignUpFormValues = {
+  email: string;
+  password: string;
+  termsAndConditions: boolean;
 };
 
-export default SignUp;
+export default function SignUp() {
+  const [err, setErr] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+  } = useForm<SignUpFormValues>();
+
+  const [signup, {}] = useSignupMutation();
+
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
+    try {
+      setErr("");
+      await signup({ email: data.email, password: data.password }).unwrap();
+      navigate("/login");
+    } catch (error) {
+      // console.log(error?.data?.message)
+      // setErr(error?.data?.message)
+      //@ts-ignore
+      if (error?.data?.message === "User already exists") {
+        setErr("User already exists");
+      } else {
+        console.error("Signup failed:", error);
+      }
+    }
+  };
+  const termsAndConditionsChecked = watch("termsAndConditions");
+
+  return (
+    <section className="w-full h-full md:h-[80vh] flex justify-center items-center">
+      <Card color="transparent" shadow={false}>
+        <Typography className="flex justify-center text-blue-600 text-3xl font-semibold">
+          Sign Up
+        </Typography>
+        <Typography className="flex justify-center text-gray-600 text-base mt-5">
+          Enter your email and password to register.
+        </Typography>
+        <form
+          className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div className="mb-4 flex flex-col gap-6">
+            <Input
+              size="lg"
+              label="Email"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
+            />
+            {err && !errors.email && (
+              <span className="text-red-500">{err}</span>
+            )}
+            {errors.email && (
+              <span className="text-red-500">{errors.email.message}</span>
+            )}
+
+            
+            <Input
+              type="password"
+              size="lg"
+              label="Password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters long",
+                },
+              })}
+            />
+            {errors.password && (
+              <span className="text-red-500">{errors.password.message}</span>
+            )}
+          </div>
+          <Checkbox
+            label={
+              <Typography
+                variant="small"
+                color="gray"
+                className="flex items-center font-normal"
+              >
+                I agree to the
+                <a
+                  href="#"
+                  className="font-medium transition-colors hover:text-blue-500"
+                >
+                  &nbsp;Terms and Conditions
+                </a>
+              </Typography>
+            }
+            containerProps={{ className: "-ml-2.5" }}
+            {...register("termsAndConditions", {
+              required: "Please accept the Terms and Conditions",
+            })}
+          />
+          {errors.termsAndConditions && (
+            <span className="text-red-500">
+              {errors.termsAndConditions.message}
+            </span>
+          )}
+          <Button
+            className="mt-6"
+            fullWidth
+            type="submit"
+            disabled={!termsAndConditionsChecked || isSubmitting}
+          >
+            Sign Up
+          </Button>
+          <Typography color="gray" className="mt-4 text-center font-normal">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="font-medium text-blue-500 transition-colors hover:text-blue-700"
+            >
+              Sign In
+            </Link>
+          </Typography>
+        </form>
+      </Card>
+    </section>
+  );
+}
