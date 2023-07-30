@@ -35,7 +35,7 @@ export default function Login() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center">
-        <Spinner />
+        <Spinner className="h-16 w-16 text-blue-500/10" />
       </div>
     );
   }

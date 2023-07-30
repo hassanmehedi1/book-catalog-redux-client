@@ -3,5 +3,5 @@ export interface IBooks {
   title: string;
   author: string;
   genre: string;
-  p_date: string;
+  publicationDate: string;
 }
