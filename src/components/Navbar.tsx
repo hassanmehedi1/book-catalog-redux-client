@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { getAccessToken } from "../redux/api/apiSlice";
 import { toast } from "react-toastify";
+import AddNewBook from "./AddNewBook";
 
 export default function NavbarBig() {
   const [openNav, setOpenNav] = React.useState(false);
@@ -79,9 +80,20 @@ export default function NavbarBig() {
           <div className="flex items-center gap-4">
             <div className="mr-4 hidden lg:block">{navList}</div>
             {accessToken ? (
-              <Button onClick={handleLogout} color="red" variant="filled">
-                Sign Out
-              </Button>
+              <>
+                <Typography
+                  as="li"
+                  variant="small"
+                  color="blue-gray"
+                  className="p-1 font-medium"
+                >
+                  <AddNewBook />
+                </Typography>
+
+                <Button onClick={handleLogout} color="red" variant="filled">
+                  Sign Out
+                </Button>
+              </>
             ) : (
               <>
                 <Link to="/login">
