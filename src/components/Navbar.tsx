@@ -57,7 +57,7 @@ export default function NavbarBig() {
         className="py-1 px-8 font-semibold text-gray-700"
       >
         <Link
-          to="/all-books"
+          to="/books"
           className="flex items-center active:text-blue-700 focus:text-blue-700"
         >
           All Books
@@ -90,7 +90,12 @@ export default function NavbarBig() {
                   <AddNewBook />
                 </Typography>
 
-                <Button onClick={handleLogout} color="red" variant="filled">
+                <Button
+                  onClick={handleLogout}
+                  color="red"
+                  variant="filled"
+                  size="md"
+                >
                   Sign Out
                 </Button>
               </>

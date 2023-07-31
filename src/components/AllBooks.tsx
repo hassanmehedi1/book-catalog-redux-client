@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
-import { Spinner } from "@material-tailwind/react";
+import { Spinner, Typography } from "@material-tailwind/react";
 import GetAllBookList from "./BookCard";
 import { CreateBookFormValues } from "./AddNewBook";
 import { useGetBooksQuery } from "../redux/features/books/bookApiSlice";
+import { getAccessToken } from "../redux/api/apiSlice";
+import AddNewBook from "./AddNewBook";
 
 export default function AllBooks() {
   const { data: books, isLoading, isError } = useGetBooksQuery();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
+
+  const accessToken = getAccessToken();
 
   if (isLoading) {
     return (
@@ -119,6 +123,21 @@ export default function AllBooks() {
           Reset Filters
         </button>
       </div>
+
+      {/* <div className="flex justify-center mt-6">
+        {accessToken && (
+          <>
+            <Typography
+              as="li"
+              variant="h1"
+              color="blue-gray"
+              className="p-3 font-medium text-xl"
+            >
+              <AddNewBook />
+            </Typography>
+          </>
+        )}
+      </div> */}
 
       <div className="books grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredBooksByGenreAndYear?.map((book: CreateBookFormValues) => (

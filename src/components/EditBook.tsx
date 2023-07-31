@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Fragment, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -8,34 +9,28 @@ import {
   Input,
   Button,
   IconButton,
+  Spinner,
 } from "@material-tailwind/react";
-import { useCreateBookMutation } from "../redux/features/books/bookApiSlice";
+import { useUpdateBookMutation } from "../redux/features/books/bookApiSlice";
 import { toast } from "react-toastify";
 
 export type CreateBookFormValues = {
-  bookId: {
-    title: any;
-    author: any;
-    genre: any;
-    image: any;
-    publicationDate: any;
-    _id: any;
-  };
   title: string;
   author: string;
   genre: string;
   publicationDate: string;
   image?: string;
-  _id: string;
-};
-export type BookCardProps = {
-  book: CreateBookFormValues;
-};
-export type ItemCardProps = {
-  item: CreateBookFormValues;
+  _id?: string;
 };
 
-export default function AddNewDialog() {
+// interface EditDialogProps {
+//   book: CreateBookFormValues
+// }
+
+//@ts-ignore
+export default function EditDialog({ book }) {
+  //   const { title, author, genre, image, publicationDate } = book?.data
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const handleCardOpen = () => setOpen((cur) => !cur);
@@ -45,27 +40,49 @@ export default function AddNewDialog() {
     formState: { errors },
   } = useForm<CreateBookFormValues>();
 
-  const [createBook] = useCreateBookMutation();
+  const [updateBook, { isLoading }] = useUpdateBookMutation();
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center">
+        <Spinner className="h-16 w-16 text-blue-500/10" />
+      </div>
+    );
+  }
 
   const onSubmit: SubmitHandler<CreateBookFormValues> = async (bookData) => {
     try {
-      const response = await createBook(bookData).unwrap();
-      console.log(response);
-      toast.success("Book Created successful!", {
+      const updatedBookData = { ...bookData };
+      delete updatedBookData._id;
+      const response = await updateBook({
+        id: book?.data?._id,
+        //@ts-ignore
+        bookData: updatedBookData,
+      }).unwrap();
+      toast.success("Book Update successful!", {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 3000, // Close the toast after 3 seconds
         hideProgressBar: true,
       });
-      handleOpen();
+      if (response) {
+        handleOpen();
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Failed to update book:", error);
+      // Handle the error case
     }
   };
 
   return (
     <Fragment>
-      <Button onClick={handleOpen} variant="outlined" size="md" fullWidth>
-        Add Book
+      <Button
+        className="w-28"
+        color="blue"
+        onClick={handleOpen}
+        variant="outlined"
+        size="sm"
+      >
+        Edit
       </Button>
       <Dialog
         open={open}
@@ -76,9 +93,7 @@ export default function AddNewDialog() {
         }}
       >
         <div className="flex justify-between items-center pr-3">
-          <DialogHeader className="text-blue-500 flex justify-center">
-            Create a New Book
-          </DialogHeader>
+          <DialogHeader>Update Book</DialogHeader>
           <IconButton
             color="red"
             size="lg"
@@ -98,6 +113,7 @@ export default function AddNewDialog() {
                 size="lg"
                 label="Title"
                 {...register("title", { required: "Title is required" })}
+                defaultValue={book?.data?.title}
               />
               {errors.title && (
                 <span className="text-red-500">{errors.title.message}</span>
@@ -106,6 +122,7 @@ export default function AddNewDialog() {
                 size="lg"
                 label="Author"
                 {...register("author", { required: "Author is required" })}
+                defaultValue={book?.data?.author}
               />
               {errors.author && (
                 <span className="text-red-500">{errors.author.message}</span>
@@ -114,29 +131,34 @@ export default function AddNewDialog() {
                 size="lg"
                 label="Genre"
                 {...register("genre", { required: "Genre is required" })}
+                defaultValue={book?.data?.genre}
               />
               {errors.genre && (
                 <span className="text-red-500">{errors.genre.message}</span>
               )}
-
               <Input
-                type="date"
                 size="lg"
                 label="Publication Date"
                 placeholder="DD/MM/YY"
                 {...register("publicationDate", {
                   required: "Publication Date is required",
                 })}
+                defaultValue={book?.data?.publicationDate}
               />
               {errors.publicationDate && (
                 <span className="text-red-500">
                   {errors.publicationDate.message}
                 </span>
               )}
-              <Input size="lg" label="Image URL" {...register("image")} />
+              <Input
+                size="lg"
+                label="Image URL"
+                {...register("image")}
+                defaultValue={book?.data?.image}
+              />
             </div>
             <Button className="mt-6" fullWidth type="submit">
-              Create
+              Update
             </Button>
           </form>
         </DialogBody>
