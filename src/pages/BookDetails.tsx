@@ -1,5 +1,5 @@
 /* eslint-disable no-empty-pattern */
-import { Button } from "@material-tailwind/react";
+import { Button, Spinner } from "@material-tailwind/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Textarea } from "@material-tailwind/react";
 import {
@@ -101,7 +101,11 @@ export default function SingleBook() {
   const isCurrentUser = userEmail === bookEmail;
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center">
+        <Spinner className="h-16 w-16 text-blue-500/10" />
+      </div>
+    );
   }
 
   return (
