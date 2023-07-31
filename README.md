@@ -4,4 +4,4 @@
 
 ## Client-Site-Repo: https://github.com/hassanmehedi1/book-catalog-redux-client
 
-## Server-repo: https://github.com/hassanmehedi1/book-catalog-server
+## Server-Site-Repo: https://github.com/hassanmehedi1/book-catalog-server
