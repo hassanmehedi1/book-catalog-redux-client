@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import { useState, useEffect } from "react";
 import {
   Card,
@@ -15,20 +16,21 @@ import {
 } from "react-icons/bs";
 
 import { Link } from "react-router-dom";
-import { useAddToWishListMutation } from "../redux/features/books/bookApiSlice";
 import { toast } from "react-toastify";
-import { BookCardProps } from "./AddNewBook";
+import { useAddToWishListMutation } from "../../redux/features/books/bookApiSlice";
+import { ItemCardProps } from "../AddNewBook";
 
 // Define the type for localStorageColors
 type LocalStorageColors = {
   [key: string]: string;
 };
 
-export default function BookCard({ book }: BookCardProps) {
+export default function CompletedCard({ item }: ItemCardProps) {
   const [localStorageColors, setLocalStorageColors] =
     useState<LocalStorageColors>({});
+  //   console.log(item?.bookId?.author)
 
-  const { title, author, genre, image, publicationDate, _id } = book;
+  const { title, author, genre, image, publicationDate, _id } = item?.bookId;
 
   const [addToWishList] = useAddToWishListMutation();
 
@@ -42,7 +44,7 @@ export default function BookCard({ book }: BookCardProps) {
           : `Added to ${status} List`;
 
       toast.success(toastMessage, {
-        position: toast.POSITION.TOP_RIGHT,
+        position: toast.POSITION.TOP_CENTER,
         autoClose: 3000,
         hideProgressBar: true,
       });
@@ -58,7 +60,7 @@ export default function BookCard({ book }: BookCardProps) {
     } catch (error) {
       console.error("Failed to add to Wish List:", error);
       toast.error("Failed to add to Wish List", {
-        position: toast.POSITION.TOP_RIGHT,
+        position: toast.POSITION.TOP_CENTER,
         autoClose: 3000,
         hideProgressBar: true,
       });
@@ -75,14 +77,14 @@ export default function BookCard({ book }: BookCardProps) {
 
   const getIconColor = (status: string) => {
     return localStorageColors[_id] === status
-      ? "text-blue-700"
+      ? "text-blue-600"
       : "text-gray-600";
   };
 
   return (
     <>
       <Card className="shadow-lg relative rounded-lg">
-        <Link className="pb-12 block" to={`/books/${book._id}`}>
+        <Link className="pb-12 block" to={`/books/${item?.bookId?._id}`}>
           <CardHeader floated={false} color="blue-gray">
             <img
               className="w-1/2 h-1/2 mx-auto object-cover"

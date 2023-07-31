@@ -26,7 +26,7 @@ export default function Footer() {
             variant="h5"
             className="mb-6 font-bold text-2xl text-blue-500"
           >
-            BookVerse
+            Book Verse
           </Typography>
           <div className="grid grid-cols-3 justify-between gap-4">
             {LINKS.map(({ title, items }) => (

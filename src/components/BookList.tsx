@@ -10,7 +10,7 @@ export default function BookList({ searchTerm }: any) {
     isError,
   } = useSearchBooksQuery(searchTerm, {
     refetchOnMountOrArgChange: true,
-    pollingInterval: 500,
+    pollingInterval: 10000,
   });
 
   if (isLoading) {
@@ -27,7 +27,7 @@ export default function BookList({ searchTerm }: any) {
 
   return (
     <section className="bookList">
-      <h2 className="text-center text-2xl md:text-3xl lg:text-4xl font-bold text-blue-700 py-5">
+      <h2 className="text-center text-2xl md:text-3xl lg:text-4xl font-bold text-gray-700 py-5">
         Recently Added Books
       </h2>
       <div className="books grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

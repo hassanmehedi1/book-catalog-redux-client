@@ -167,7 +167,7 @@ export default function SingleBook() {
             reviewData?.data?.reviews.map((review: string, index: number) => (
               <div key={index} className="flex items-center my-3">
                 <Avatar
-                  src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                  src="https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
                   alt="avatar"
                 />
                 <p className="ml-4 text-gray-800"> {review} </p>
